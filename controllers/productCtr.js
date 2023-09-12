@@ -1,9 +1,6 @@
 const express = require('express')
-
-const router = express.Router()
-const Product = require("../models/product")
-
 const multer = require('multer')
+const Product = require("../models/productModel")
 
 filename = '';
 
@@ -19,8 +16,10 @@ const mystorage = multer.diskStorage({
 
 const upload = multer({storage: mystorage})
 
-// Post Method
-router.post("/create_product", upload.any('image'), async(req,res) => {
+// @route   POST api/product/createProduct
+// @desc    Create a Product
+// @access  Public
+const createProduct = async(req,res) => {
     try {
         data = req.body
         const newProduct = new Product(data)
@@ -31,20 +30,24 @@ router.post("/create_product", upload.any('image'), async(req,res) => {
     } catch (error) {
         res.status(400).send(error)
     }
-})
+}
 
-// Get Method
-router.get("/products", async(req,res) => {
+// @route   GET api/product/products
+// @desc    Get All Products
+// @access  Public
+const getProducts = async(req,res) => {
     try {
         const products = await Product.find()
         res.status(200).send(products)
     } catch (error) {
         res.status(400).send(error)
     }
-})
+}
 
-// Get By Id 
-router.get("/getProductById/:id", async(req,res) => {
+// @route   GET api/product/products/:id
+// @desc    Get Product By Id
+// @access  Public
+const productId = async(req, res) => {
     try {
         const my_id = req.params.id
         const product = await Product.findById(my_id)
@@ -52,10 +55,12 @@ router.get("/getProductById/:id", async(req,res) => {
     } catch (error) {
         res.status(400).send(error)
     }
-})
+}
 
-// Put Method
-router.put("/update_product/:id", async(req,res) => {
+// @route   PUT api/product/update_product/:id
+// @desc    Update Product
+// @access  Public
+const updateProduct = async(req, res) => {
     try {
         const id = req.params.id
         const product = req.body
@@ -64,10 +69,12 @@ router.put("/update_product/:id", async(req,res) => {
     } catch (error) {
         res.status(400).send(error)
     }
-})
+}
 
-// Delete Method
-router.delete("/delete_product/:id", async(req,res) => {
+// @route   DELETE api/product/delete_product/:id
+// @desc    Delete Product
+// @access  Public
+const removeProduct = async(req, res) => {
     try {
         const id = req.params.id
         deleted = await Product.findOneAndDelete({_id: id})
@@ -75,6 +82,13 @@ router.delete("/delete_product/:id", async(req,res) => {
     } catch (error) {
         res.status(400).send(error)
     }
-})
+}
 
-module.exports = router
+module.exports = {
+    upload,
+    createProduct,
+    getProducts,
+    productId,
+    updateProduct,
+    removeProduct
+}

@@ -1,15 +1,12 @@
 const express = require('express')
 
-const userRoute = require('./routes/user')
-const productRoute = require('./routes/product')
-
 require('./config/connect')
 
 const app = express()
 app.use(express.json())
 
-app.use('/product', productRoute)
-app.use('/user', userRoute)
+app.use('/api/product', require('./routes/productRoute'))
+app.use('/api/user', require('./routes/userRoute'))
 
 app.use('/get_image', express.static('./uploads'))
 
